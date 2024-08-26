@@ -3,7 +3,7 @@
       <h2>Place Your Order</h2>
   
       <label for="name">Delivery To (Name):</label>
-      <input type="text" id="name" v-model="customerName" placeholder="Enter name" required />
+      <input type="text" id="name" v-model="customerName" placeholder="Enter name" required autofocus />
   
       <label for="deliveryAddress">Delivery Address:</label>
       <input type="text" id="deliveryAddress" v-model="deliveryAddress" placeholder="Enter delivery address" required />
@@ -32,9 +32,11 @@
         <h3>Cart</h3>
         <div v-for="(item, index) in cartItems" :key="index" class="cart-item">
           <p>{{ item.product }} - {{ item.quantity }} x {{ item.price }} Naira</p>
-          <button type="button" @click="removeFromCart(index)">Remove Item</button>
-          <button type="button" @click="decrementQuantity(index)">-</button>
-          <button type="button" @click="incrementQuantity(index)">+</button>
+          <div class="cart-item-actions">
+            <button type="button" @click="decrementQuantity(index)">-</button>
+            <button type="button" @click="incrementQuantity(index)">+</button>
+            <button type="button" @click="removeFromCart(index)">Remove Item</button>
+          </div>
         </div>
         <div class="cart-summary">
           <p v-if="totalAmount > 0">Total Amount: {{ totalAmount }} Naira</p>
@@ -138,8 +140,13 @@
                         `*Items:* \n${orderDetails}\n\n` +
                         `*Total Amount:* ${this.totalAmount} Naira`;
   
-        const whatsappUrl = `https://wa.me/+32466405994?text=${encodeURIComponent(message)}`;
-        window.open(whatsappUrl, '_blank');
+        const whatsappURL = `https://wa.me/+32466405994?text=${encodeURIComponent(message)}`;
+        const fallbackURL = `https://api.whatsapp.com/send?phone=+32466405994&text=${encodeURIComponent(message)}`;
+        
+        // Open the WhatsApp link, fallback if it fails
+        window.open(whatsappURL, '_blank').catch(() => {
+          window.open(fallbackURL, '_blank');
+        });
       },
     },
   };
@@ -152,16 +159,26 @@
     width: 100%;
     max-width: 600px;
     margin: auto;
+    padding: 15px;
+    box-sizing: border-box;
   }
   
   label {
     margin: 10px 0 5px;
+    font-size: 16px;
   }
   
   input, select, button {
     margin-bottom: 10px;
-    padding: 8px;
-    font-size: 14px;
+    padding: 12px;
+    font-size: 16px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+  }
+  
+  input:focus, select:focus {
+    outline: none;
+    border-color: #007bff;
   }
   
   .product-selection {
@@ -170,14 +187,20 @@
     margin-bottom: 20px;
   }
   
-  .product-selection label {
-    margin-bottom: 5px;
-  }
-  
   .product-selection select,
   .product-selection input {
-    margin-bottom: 10px;
-    padding: 8px;
+    padding: 10px;
+  }
+  
+  button {
+    font-size: 16px;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  button:hover {
+    background-color: #0056b3;
   }
   
   .cart {
@@ -186,13 +209,19 @@
   
   .cart-item {
     display: flex;
+    flex-direction: column;
     justify-content: space-between;
-    align-items: center;
     margin-bottom: 10px;
   }
   
   .cart-item p {
     margin: 0;
+  }
+  
+  .cart-item-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
   }
   
   .cart-summary {
@@ -204,12 +233,12 @@
   }
   
   .order-summary button {
-    padding: 10px;
-    font-size: 16px;
+    padding: 12px;
+    font-size: 18px;
     background-color: #007bff;
     color: white;
     border: none;
-    border-radius: 4px;
+    border-radius: 5px;
     cursor: pointer;
   }
   
