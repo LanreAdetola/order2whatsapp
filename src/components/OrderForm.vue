@@ -70,8 +70,8 @@ export default {
       cartItems: [],
       cartActions: [], // To track the selected action for each cart item
       products: [
-        { id: 1, name: 'Grilled Guineafowl', price: '8,000 Naira' },
-        { id: 2, name: 'Grilled Turkey (4pieces)', price: '12,000 Naira' },
+        { id: 1, name: 'Grilled Guineafowl', price: '8,000' },
+        { id: 2, name: 'Grilled Turkey (4pieces)', price: '12,000' },
       ],
     };
   },
